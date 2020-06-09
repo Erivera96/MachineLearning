@@ -1,7 +1,4 @@
-﻿"Title: Population Distribution by Race/Ethnicity | KFF"
-"Timeframe: 2018"
-"Location","White","Black","Hispanic","American Indian/Alaska Native","Asian","Native Hawaiian/Other Pacific Islander","Two Or More Races","Total",Footnotes
-"United States","0.60","0.12","0.18","0.01","0.06","<.01","0.03","1.00","1"
+"State","White","Black","Hispanic","American Indian/Alaska Native","Asian","Native Hawaiian/Other Pacific Islander","Two Or More Races","Total"
 "Alabama","0.66","0.26","0.04","<.01","0.01","N/A","0.02","1.00"
 "Alaska","0.60","0.03","0.07","0.16","0.06","0.01","0.07","1.00"
 "Arizona","0.54","0.04","0.32","0.04","0.03","<.01","0.02","1.00"
@@ -53,21 +50,3 @@
 "West Virginia","0.92","0.04","0.01","<.01","0.01","N/A","0.02","1.00"
 "Wisconsin","0.81","0.06","0.07","0.01","0.03","<.01","0.02","1.00"
 "Wyoming","0.84","0.00","0.10","0.02","0.01","N/A","0.02","1.00"
-"Puerto Rico","0.01","<.01","0.99","N/A","N/A","N/A","<.01","1.00"
-
-"Notes"
-"Population and demographic data on are based on analysis of the Census Bureau’s American Community Survey (ACS) and may differ from other population estimates published yearly by the Census Bureau. U.S. and state population data displayed on this site are restricted to the civilian, non-institutionalized population for whom ACS collects and reports poverty information. "
-""
-"Population numbers are rounded to the nearest 100."
-
-"Sources"
-"Kaiser Family Foundation estimates based on the Census Bureau's American Community Survey, 2008-2018."
-
-"Definitions"
-"*N/A*: Estimates with relative standard errors greater than 30% are not provided."
-""
-"Persons of Hispanic origin may be of any race; all other racial/ethnic groups are non-Hispanic."
-
-
-Footnotes
-"1. US total excludes Puerto Rico."
