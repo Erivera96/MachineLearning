@@ -2,17 +2,7 @@ from imports import *
 
 # Standard Principal Component Analysis
 
-def SPCA(features, feature_removal="set_threshold", threshold=1, dimensions=()):
-
-    # STEP 0:
-    #         Checking for square data
-    
-    square = True
-    rows = features.shape[0]
-    cols = features.shape[1]
-    
-    if rows != cols:
-        square = False
+def SPCA(features, feature_removal="set_threshold", threshold=0.4, threshold_round="down",dimensions=(), precision=2):
 
     # STEP 1:
     #         Structuring the data
@@ -37,20 +27,6 @@ def SPCA(features, feature_removal="set_threshold", threshold=1, dimensions=()):
     Z = np.transpose(np.array([X[:,j]/np.std(X[:,j]) for j in range(X.shape[1])]))
 
     # STEP 3:
-    #         Pad matrix if not square
-    
-    right_pad = False
-
-    if not square:
-
-        if features.shape[0] > features.shape[1]:
-            Z_pad = np.pad(Z, ((0,0),(0, rows - cols)), 'constant', constant_values=1)
-            right_pad = True
-        else:
-            Z_pad = np.pad(Z, ((0, cols - rows),(0,0)), 'constant', constant_values=1)
-            bottom_pad = True
-
-    # STEP 3.5:
     #         Get covariance matrix
 
     # -> The simple answer, where C is covariance matrix, is: C = transpose(Z) * Z
@@ -63,8 +39,16 @@ def SPCA(features, feature_removal="set_threshold", threshold=1, dimensions=()):
     #    When we multiply this out, we see that the major diagonal is the covariance
     #    of its respective column. The upper and lower triangular halves are the
     #    covariances of the combinations of pairs of feature columns.
+    
+    rows, cols = Z.shape
+    
+    if rows >= cols:
+    
+        C = np.dot(Z.T, Z)
 
-    C = np.transpose(Z_pad) * Z_pad
+    if cols > rows:
+
+        C = np.dot(Z, Z.T)
 
     # STEP 4:
     #         Calculate the eigen vectors and their corresponding eigen values
@@ -79,11 +63,10 @@ def SPCA(features, feature_removal="set_threshold", threshold=1, dimensions=()):
 
     eigen_values, eigen_vectors = la.eig(C)
 
-    P_vals = np.sort(eigen_values)[::-1]
-    print("eigen values: {}".format(P_vals))
+    eigvals = np.sort(eigen_values)[::-1]
     
     sortdex = np.argsort(eigen_values)[::-1]
-    P = np.array([eigen_vectors[dex] for dex in sortdex])
+    eigvecs = np.array([eigen_vectors[dex] for dex in sortdex])
 
     # STEP 5:
     #         Calculate new features
@@ -92,12 +75,7 @@ def SPCA(features, feature_removal="set_threshold", threshold=1, dimensions=()):
     #    What's really happening: you shift and rotate the covariance matrix (C) to represent
     #    the axis that will represent it the best (the eigenvectors) in a meaningful way.
 
-    C_star = C * P
-
-    if right_pad:
-        C_star = C_star[:, :(C_star.shape[1] - (rows - cols))]
-    else:
-        C_star = C_star[:(C_star.shape[0] - (cols - rows)), :]
+    C_star = np.dot(C, eigvecs)
 
     # STEP 6:
     #         Remove unnecessary features
@@ -109,31 +87,42 @@ def SPCA(features, feature_removal="set_threshold", threshold=1, dimensions=()):
     # -> Three choices to remove:
 
     # 1. Set a desired dimension
-    # 2. Calculate proportion of variance for each feature and set a threshold
+    # 2. Set a threshold for how many primary components you'll keep 
     # 3. Same as 2 but instead plot the cumulative proportion of variance and as you add more
     #    features, once you hit a feature that starts dropping the variance, stop.
-
-    retmat = C_star
     
-    if feature_removal == "set_threshold":
+    if feature_removal.lower() == "set_threshold":
         
-        index = len(P_vals)
-        variance = sum(P_vals[:index])/sum(P_vals)
-        
-        while variance >= threshold:
-            index -= 1
-            variance = sum(P_vals[:index])/sum(P_vals)
-            print("variance: {} at index: {}".format(variance, index))
+        # Find the percentage of principal components you want, floor it, return it
+        return C_star[:, :floor(len(eigvals)*threshold)]
 
-        retmat = retmat[:, :index]
-    
-    elif feature_removal == "set_dimension":
+    elif feature_removal.lower() == "set_dimension":
         
-        retmat = retmat[:dimensions[0], :dimensions[1]]
+        # Only return up to desired row and col dimensions
+        return C_star[:dimensions[0], :dimensions[1]]
     
-    #elif feature_removal == "show_variance":
+    elif feature_removal.lower() == "show_variance":
         
+        # Calculate the cumulative variance
+        cumulative_variance = np.array([sum(eigvals[:i+1])/sum(eigvals) for i in range(len(eigvals))])
+        #print("cumulative variance\n{}\n".format(cumulative_variance))
 
-    # STEP 7:
-    #         Return the new matrix
-    return retmat
+        cumulative_variance = [trunc(cumulative_variance[i]*10**precision) for i in range(len(cumulative_variance))]
+        var_sortdex = np.argsort(cumulative_variance)[::-1]
+        cumulative_variance = cumulative_variance[::-1]
+        print("truncated cumu_var\n{}\n".format(cumulative_variance))
+        
+        index = [i+1 for i in range(len(cumulative_variance)-1) if cumulative_variance[i] == cumulative_variance[i+1]]
+        print("Adding {} principal components\n".format(index))
+        
+        #plt.plot(eigvals, '*',cumulative_variance)
+        #plt.title("Cumulative Aariance as Eigen Values are Added")
+        #plt.xlabel("Eigenvalues")
+        #plt.ylabel("Cumulative Variance")
+        #plt.show()
+
+        return C_star[:, index]
+
+    else:
+        print("ERROR: Expected one of the following:\n\t\"set_threshold\"\n\t\"set_dimension\"\n\t\"show_variance\"\nBut got something else.")
+        return
