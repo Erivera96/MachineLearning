@@ -2,7 +2,7 @@ from imports import *
 
 # Standard Principal Component Analysis
 
-def SPCA(features, feature_removal="set_threshold", threshold=0.4, threshold_round="down",dimensions=(), precision=2):
+def SPCA(features, feature_removal="set_threshold", threshold=0.4, threshold_round="down",xdimension=0, reduce_instances=False, precision=2):
 
     # STEP 1:
     #         Structuring the data
@@ -43,12 +43,18 @@ def SPCA(features, feature_removal="set_threshold", threshold=0.4, threshold_rou
     rows, cols = Z.shape
     
     if rows >= cols:
-    
-        C = np.dot(Z.T, Z)
+        
+        if reduce_instances:
+            C = np.dot(Z.T, Z)
+        else:
+            C = np.dot(Z, Z.T)
 
     if cols > rows:
-
-        C = np.dot(Z, Z.T)
+        
+        if reduce_instances:
+            C = np.dot(Z, Z.T)
+        else:
+            C = np.dot(Z.T, Z)
 
     # STEP 4:
     #         Calculate the eigen vectors and their corresponding eigen values
@@ -75,7 +81,7 @@ def SPCA(features, feature_removal="set_threshold", threshold=0.4, threshold_rou
     #    What's really happening: you shift and rotate the covariance matrix (C) to represent
     #    the axis that will represent it the best (the eigenvectors) in a meaningful way.
 
-    C_star = np.dot(C, eigvecs)
+    C_star = np.real(np.dot(C, eigvecs))
 
     # STEP 6:
     #         Remove unnecessary features
@@ -99,7 +105,7 @@ def SPCA(features, feature_removal="set_threshold", threshold=0.4, threshold_rou
     elif feature_removal.lower() == "set_dimension":
         
         # Only return up to desired row and col dimensions
-        return C_star[:dimensions[0], :dimensions[1]]
+        return C_star[:, :dimension[1]]
     
     elif feature_removal.lower() == "show_variance":
         
