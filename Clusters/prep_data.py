@@ -1,7 +1,7 @@
 from imports import *
 CWD = os.getcwd()
 
-def PrepData(data, number_of_labels):
+def PrepData(data, number_of_labels, number_of_images_per_label):
 
     #convert the data to an array
     data_array = np.array(data)
@@ -14,7 +14,7 @@ def PrepData(data, number_of_labels):
      
     # we include 10 of each label we want
     for i in range(number_of_labels):
-        labels_included.extend([j for j in range(len(labels)) if labels[j] == i][:10])
+        labels_included.extend([j for j in range(len(labels)) if labels[j] == i][:number_of_images_per_label])
 
     # shuffle the aquired labels, seed it to get same results
     r.seed(7)
@@ -65,3 +65,9 @@ def BinaryThresholding(data_array):
     binary_data_array = np.array([binary_data_array[i,:,:].reshape(28*28) for i in range(number_of_images)])
 
     return binary_data_array
+
+def ReduceImage():
+    
+
+
+    return
