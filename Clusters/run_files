@@ -1,0 +1,8 @@
+#! /bin/bash
+
+#pip3 install plotly-express
+#pip3 install opencv-python
+
+python3 setup.py build_ext --inplace
+
+python3 main.py

@@ -1,5 +1,6 @@
 import numpy as np
 import time 
+import plotly.express as px
 import random as r
 import matplotlib.pyplot as plt
 import pandas as pd

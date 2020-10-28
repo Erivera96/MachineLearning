@@ -1,77 +1,133 @@
+# cython: profile=True
+
 from imports import *
  
 # The K-means algorithm function
-def CythonNaiveKMeans(P, k, eps=1e-2, max_iter=3e2):
- 
-    # find how many dimensions there are
-    dims = P.shape[1] 
- 
-    # find the min and max of each dimension
-    bounds = bounds = np.array([(np.min(P[:,i]), np.max(P[:,i])) for i in range(dims)])
+def CythonNaiveKMeans(int num_points, int dims, int** data, int k, float eps, int max_iter):
     
+    # Decalre all variables
+    cdef int i = 0 
+    cdef int j = 0
+    cdef int index = 0
+    cdef int centroid_max_diff = np.inf
+    cdef int * bins = <int *>malloc(num_points*sizeof(int))
+    cdef int ** bounds = <int *>malloc(2*sizeof(int))
+    cdef int ** centroids = <int *>malloc(k*sizeof(int))
+
+    # Initialize fixed values
+    #i = 0, j = 0, index = 0, centroid_max_diff = np.inf
+
+    # Pre-allocate array memory
+    #bins = <int *>malloc(num_points*sizeof(int))
+    #bounds = <int *>malloc(2*sizeof(int))
+    #centroids = <int *>malloc(k*sizeof(int))
+
+    for i in range(k):
+        if i < 2:
+            bounds[i] = <int *>malloc(dims*sizeof(int))
+    
+        centroids[i] = <int *>malloc(dims*sizeof(int))
+
+    # Find the min and max of each dimension
+    for i in range(dims):
+        bounds[0][i] = np.min(data[:, i])
+        bounds[1][i] = np.max(data[:, i])
+
     # Initialize k centroids randomly
-    centroids =  []
-    
-    for i in range(0,k):
-        centroids.append(np.array([bounds[i,0] + (bounds[i,1] - bounds[i,0])*np.random.rand() for i in range(dims)]))
-    
-    centroids = np.array(centroids)
+    for i in range(k):
+        for j in range(dims):
+            centroids[i][j] = bounds[0][j] + (bounds[1][j] - bounds[0][j])*np.random.rand()
     
     # Starting K-Means
-    num_points = P.shape[0]
-    bins = None
-    iter = 0
-    centroid_max_diff = np.inf
- 
-    while iter < int(max_iter) and centroid_max_diff > eps:
- 
+    while index < max_iter and centroid_max_diff > eps:
+        
         # Step 1: Want to assign data to centroids
-        bins = np.array([AssignToCluster(P[row,:], centroids) for row in range(num_points)])
- 
+        for i in range(num_points):
+            bins[i] = AssignToCluster(i, dims, data[i,:], k, centroids)
+
         # Step 2: Recalculate centroid position for every cluster
-        centroids_prime = CalculateCentroids(P, bins, k, bounds)
+        centroids_prime = CalculateCentroids(data, bins, k, bounds)
  
         # Step 3: See if they have converged
         centroid_max_diff = np.max(np.abs(centroids_prime - centroids))
         
-        # new centroids
+        # New centroids
         centroids = centroids_prime
  
-        # increment iter
-        iter += 1
+        # Increment index
+        index += 1
  
-        if iter%50 == 0:
-            print("iter:{}".format(iter))
+        if index%10 == 0:
+            f"index: {index}"
  
     return centroids, bins
 
-def AssignToCluster(P_row, centroids):
-    return np.argmin([EuclidianDistance(P_row, centroids[i,:]) for i in range(centroids.shape[0])])
-
-def EuclidianDistance(p1, p2):
+def AssignToCluster(int row, int dims, int* data_row, int k, int** centroids):
     
+    # Initialize variables
+    cdef int i
+    cdef int retarr
+
+    # Allocate memory
+    i = 0
+    retarr = <int *>malloc(k*sizeof(int))
+
+    # Loop through all the points for each centroid and calculate their euclid dist
+    for i in range(k):
+        retarr[i] = EuclidianDistance(row, dims, data_row, i, centroids[i, :])
+
+    return np.argmin(retarr)
+
+def EuclidianDistance(int row, int dims, int* p1, int kth, int* p2):
+    
+    # Initialize variables
+    cdef int value, retval
+ 
+    # Set values
+    value = 0
     retval = 0
+
+    for value in range(row):
  
-    for i in range(p1.shape[0]):
- 
-        retval += (p1[i] - p2[i])*(p1[i] - p2[i])
+        retval += (p1[value] - p2[value])*(p1[value] - p2[value])
     
     retval = np.sqrt(retval)
  
     return retval
 
-def CalculateCentroids(P, bins, k, bounds):
+def CalculateCentroids(int num_points, int dims, int** data, int* bins, int K, int** bounds):
  
-    centroids = []
+    # Initialize variables
+    cdef int i, j, k
+    cdef int centroids, points
     
-    for i in range(0, k): # max_bins + 1 = k
- 
-       points = np.array([P[j,:] for j in range(P.shape[0]) if bins[j] == i]) # gets all points for a single cluster
- 
-       # if no points belong to this centroid, rerandomize the centroid, else calc with mean
-       if points.size == 0:
-           centroids.append(np.array([bounds[i,0] + (bounds[i,1]-bounds[i,0])*np.random.rand() for i in range(P.shape[1])]))
-       else:
-           centroids.append(np.array([np.mean(points[:,i]) for i in range(P.shape[1])])) 
+    # Set values & allocate memory
+    i = 0
+    j = 0
+    k = 0
+    centroids = <int *>malloc(K*sizeof(int))
+    points = <int *>malloc(K*sizeof(int))
+
+    # Allocate more memory
+    for i in range(K):
+        centroids[i] = <int *>malloc(dims*sizeof(int))
+        points[i] = <int *>malloc(dims*sizeof(int))
+
+    # For each bin, for every point in that bin, those points belong to that cluster
+    for i in range(K): # max_bins + 1 = k
+        for j in range(num_points):
+            if bins[j] == i:
+                for k in range(dims):
+                    points[i][k] = data[j][k]
+                
+        # If no points belong to this centroid, rerandomize the centroid, else calc with mean
+        if points.size == 0:
+            for j in range(dims):
+                centroids[i][j] = bounds[0][j] + (bounds[1][j]-bounds[0][j])*np.random.rand()
+        else:
+            for j in range(dims):
+                
+                for k in range(K):
+                    centroids[i][j] = np.mean(points[:][k]) 
     
-    return np.array(centroids)
+    return centroids

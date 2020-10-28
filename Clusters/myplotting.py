@@ -1,4 +1,5 @@
 from imports import *
+CWD = os.getcwd()
 
 def MyPlotImages(n, img_array, name):
 
@@ -8,4 +9,10 @@ def MyPlotImages(n, img_array, name):
         for j in range(n):
             ax[i, j].imshow(img_array[i*n + j,:].reshape(28, 28))
 
-    fig.savefig("/mnt/c/Users/river/figures/{}.png".format(name))
+    fig.savefig("{}/figures/{}.png".format(CWD,name))
+
+def PlotClusters(bins, binary_digits_array, name):
+
+    fig = px.bar(binary_digits_array, x=bins, color = binary_digits_array[:,0])        
+    #fig.savefig("{}/figures/{}.png".format(CWD,name))
+    fig.show()

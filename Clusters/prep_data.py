@@ -3,6 +3,8 @@ CWD = os.getcwd()
 
 def PrepData(data, number_of_labels, number_of_images_per_label):
 
+    print("Prepping the data...")
+
     #convert the data to an array
     data_array = np.array(data)
 
@@ -23,14 +25,18 @@ def PrepData(data, number_of_labels, number_of_images_per_label):
     labels_included = np.array(labels_included)
      
     # don't want to give the algo the labels so extract them
-    return labels_included, data_array[labels_included, 1:]
+    return data_array[labels_included,0], data_array[labels_included, 1:]
 
 def CreateImages(data_array):
+    
+    print("Creating images...")
 
     number_of_images = data_array.shape[0]
 
     # convert 2d array into 3d array and cast values to uint8
     data_matrix = np.array([data_array[i,:].reshape(28,28) for i in range(number_of_images)], dtype=np.uint8)
+    
+    print("Saving images....")
     
     # convert all the 2d arrays from data_matrix and save them as .png
     # MAKE SURE TO HAVE mnist_images DIRECTORY CREATED FIRST
@@ -40,6 +46,8 @@ def CreateImages(data_array):
     return
 
 def BinaryThresholding(data_array):
+
+    print("Turning to binary...")
 
     number_of_images = data_array.shape[0]
     
@@ -68,6 +76,4 @@ def BinaryThresholding(data_array):
 
 def ReduceImage():
     
-
-
     return
