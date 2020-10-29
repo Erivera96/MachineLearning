@@ -6,7 +6,6 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import png
 import cv2
-import cProfile
 import re
 import os
 from load_data import *
