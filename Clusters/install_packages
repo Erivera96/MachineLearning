@@ -1,0 +1,5 @@
+conda create -n research
+conda activate research
+conda install plotly
+conda install -c conda-forge/label/cf202003 pypng
+conda install -c conda-forge/label/cf202003 opencv

@@ -1,0 +1,12 @@
+#! /bin/bash/
+
+wget https://raw.githubusercontent.com/Erivera96/MachineLearning/master/Clusters/run_files
+wget https://raw.githubusercontent.com/Erivera96/MachineLearning/master/Clusters/setup.py
+wget https://raw.githubusercontent.com/Erivera96/MachineLearning/master/Clusters/prep_data.py
+wget https://raw.githubusercontent.com/Erivera96/MachineLearning/master/Clusters/naive_kmeans.py
+wget https://raw.githubusercontent.com/Erivera96/MachineLearning/master/Clusters/myplotting.py
+wget https://raw.githubusercontent.com/Erivera96/MachineLearning/master/Clusters/main.py
+wget https://raw.githubusercontent.com/Erivera96/MachineLearning/master/Clusters/load_data.py
+wget https://raw.githubusercontent.com/Erivera96/MachineLearning/master/Clusters/imports.py
+wget https://raw.githubusercontent.com/Erivera96/MachineLearning/master/Clusters/cython_naive_kmeans.pyx
+wget https://raw.githubusercontent.com/Erivera96/MachineLearning/master/Clusters/cython_naive_kmeans.c
