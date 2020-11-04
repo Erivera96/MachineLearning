@@ -3,7 +3,7 @@
 from imports import *
  
 # The K-means algorithm function
-def CythonNaiveKMeans(int num_points, int dims, int** data, int k, float eps, int max_iter):
+def CythonNaiveKMeans(int num_points, int dims, int* data, int k, float eps, int max_iter):
     
     # Decalre all variables
     cdef int i = 0 
@@ -11,34 +11,18 @@ def CythonNaiveKMeans(int num_points, int dims, int** data, int k, float eps, in
     cdef int index = 0
     cdef int centroid_max_diff = np.inf
     cdef int * bins = <int *>malloc(sizeof(int)*num_points)
-    cdef int * bounds = <int *>malloc(2*dims*sizeof(int)*2*dims)
-    cdef int ** centroids = <int *>malloc(k*sizeof(int)*k*dims)
-
-    # Initialize fixed values
-    #i = 0, j = 0, index = 0, centroid_max_diff = np.inf
-
-    # Pre-allocate array memory
-    #bins = <int *>malloc(num_points*sizeof(int))
-    #bounds = <int *>malloc(2*sizeof(int))
-    #centroids = <int *>malloc(k*sizeof(int))
-    
-    '''
-    for i in range(k):
-        if i < 2:
-            bounds[i] = <int *>malloc(dims*sizeof(int))
-    
-        centroids[i] = <int *>malloc(dims*sizeof(int))
-    '''
+    cdef int * bounds = <int *>malloc(sizeof(int)*2*dims)
+    cdef int * centroids = <int *>malloc(sizeof(int)*k*dims)
 
     # Find the min and max of each dimension
     for i in range(dims):
-        bounds[0][i] = np.min(data[:, i])
-        bounds[1][i] = np.max(data[:, i])
+        bounds[0*dims + i] = np.min(data[:, i])
+        bounds[1*dims + i] = np.max(data[:, i])
     
     # Initialize k centroids randomly
     for i in range(k):
         for j in range(dims):
-            centroids[i][j] = bounds[0][j] + (bounds[1][j] - bounds[0][j])*np.random.rand()
+            centroids[i*dims + j] = bounds[0*dims + j] + (bounds[1*dims + j] - bounds[0*dims + j])*np.random.rand()
     
     # Starting K-Means
     while index < max_iter and centroid_max_diff > eps:

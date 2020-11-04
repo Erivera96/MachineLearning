@@ -1,3 +1,4 @@
+#! /bin/bash/
 conda create -n research
 conda activate research
 conda install plotly
