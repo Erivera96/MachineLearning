@@ -1,6 +1,10 @@
 #! /bin/bash/
 
+# Bash files
 wget https://raw.githubusercontent.com/Erivera96/MachineLearning/master/Clusters/run_files
+wget https://raw.githubusercontent.com/Erivera96/MachineLearning/master/Clusters/install_packages
+
+# Main Files
 wget https://raw.githubusercontent.com/Erivera96/MachineLearning/master/Clusters/setup.py
 wget https://raw.githubusercontent.com/Erivera96/MachineLearning/master/Clusters/prep_data.py
 wget https://raw.githubusercontent.com/Erivera96/MachineLearning/master/Clusters/naive_kmeans.py
@@ -9,4 +13,6 @@ wget https://raw.githubusercontent.com/Erivera96/MachineLearning/master/Clusters
 wget https://raw.githubusercontent.com/Erivera96/MachineLearning/master/Clusters/load_data.py
 wget https://raw.githubusercontent.com/Erivera96/MachineLearning/master/Clusters/imports.py
 wget https://raw.githubusercontent.com/Erivera96/MachineLearning/master/Clusters/cython_naive_kmeans.pyx
+
+# These get generated when the .pyx file is compiled so optional to download
 wget https://raw.githubusercontent.com/Erivera96/MachineLearning/master/Clusters/cython_naive_kmeans.c
