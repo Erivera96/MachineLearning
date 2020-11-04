@@ -1,6 +1,9 @@
-#! /bin/bash/
-conda create -n research
-conda activate research
+#!/bin/bash/
+
+# create a new environment and run the following
+
 conda install plotly
+conda install pandas
+conda install -c anaconda pillow
 conda install -c conda-forge/label/cf202003 pypng
 conda install -c conda-forge/label/cf202003 opencv

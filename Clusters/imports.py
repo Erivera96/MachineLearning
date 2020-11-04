@@ -12,5 +12,4 @@ from load_data import *
 from prep_data import *
 from naive_kmeans import *
 from myplotting import *
-#from cython_naive_kmeans import *
-from cython_naive_kmeans_1darrays import *
+from cython_naive_kmeans import *

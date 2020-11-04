@@ -14,5 +14,4 @@ def MyPlotImages(n, img_array, name):
 def PlotClusters(bins, binary_digits_array, name):
 
     fig = px.bar(binary_digits_array, x=bins, color = binary_digits_array[:,0])        
-    #fig.savefig("{}/figures/{}.png".format(CWD,name))
     fig.show()
