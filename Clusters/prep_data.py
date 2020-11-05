@@ -74,6 +74,6 @@ def BinaryThresholding(data_array):
 
     return binary_data_array
 
-def ReduceImage():
+def ReduceImage(): # (work in progress)
     
     return
