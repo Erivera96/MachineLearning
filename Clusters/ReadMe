@@ -1,4 +1,5 @@
 The files without extensions are bash files, they need to be chmodded to executable (chmod +x [filename]).
+Please read comments in the bash files before running it (you may not need to run everything in each file)
 
 For the python packages, it's assuming you have anaconda installed. I would advise to create a new environment for those packages.
 
