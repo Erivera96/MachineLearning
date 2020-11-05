@@ -1,7 +1,4 @@
-#QT_STYLE_OVERRIDE=""
-
 from imports import *
-
 CWD = os.getcwd()
 
 # Load the uncleaned data
@@ -16,7 +13,7 @@ number_of_images_per_label = 20
 # Weed out some data (too much data!!!???)
 labels, digits_array = PrepData(digits_dataframe, number_of_labels, number_of_images_per_label)
 
-# Shoe the original data dimensions for later comparison
+# Show the original data dimensions for later comparison
 print("Original data shape: ", digits_array.shape)
 
 # Convert the color values into images (this is for thresholding)
@@ -54,6 +51,6 @@ df = pd.DataFrame(data=data_reunited, columns=digits_dataframe.columns)
 print(labels)
 print(cy_bins)
 
-# Save a picture of how well it did
+# Save a picture of how well it did (work in progress)
 print("Saving scatter...")
 PlotClusters(cy_bins, data_reunited, "eval")
