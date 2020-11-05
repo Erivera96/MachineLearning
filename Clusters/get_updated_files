@@ -16,3 +16,4 @@ wget https://raw.githubusercontent.com/Erivera96/MachineLearning/master/Clusters
 
 # These get generated when the .pyx file is compiled so optional to download
 wget https://raw.githubusercontent.com/Erivera96/MachineLearning/master/Clusters/cython_naive_kmeans.c
+wget https://raw.githubusercontent.com/Erivera96/MachineLearning/master/Clusters/:cython_naive_kmeans.cpython-38-x86_64-linux-gnu.so
