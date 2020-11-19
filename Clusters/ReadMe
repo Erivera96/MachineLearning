@@ -3,4 +3,5 @@ The MNIST dataset was used as a standard benchmark for testing algorithms.
 
 *** NOTES *** 
 The files without extensions are bash files, they need to be chmodded to executable (chmod +x [filename]).
+get_updated_files gets all the files in this directory (except itself of course)
 run_files lets you run the program
