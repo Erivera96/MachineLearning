@@ -5,10 +5,10 @@ CWD = os.getcwd()
 digits_dataframe = LoadData('{}/mnist/mnist_test.csv'.format(CWD))
 
 # How many clusters there should be
-number_of_labels = 9
+number_of_labels = 3
 
 # Number of labels * the number of images per label = total number of images
-number_of_images_per_label = 20
+number_of_images_per_label = 100
 
 # Weed out some data (too much data!!!???)
 labels, digits_array = PrepData(digits_dataframe, number_of_labels, number_of_images_per_label)

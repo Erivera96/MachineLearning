@@ -53,26 +53,27 @@ def BinaryThresholding(data_array):
     
     # get all the location and names for the images
     image_titles = ['{}/mnist_images/img{}.png'.format(CWD,i) for i in range(number_of_images)]
-    binary_images = []
+    binary_data_array = []
     
     # read in each image and preform binary image thresholding on it 
     # (black and dark grays turn black, white and light gray turn white)
     for i in range(number_of_images):
-        image = cv2.imread(image_titles[i], 0)
-        binary_images.append(cv2.threshold(image, 127, 255, cv2.THRESH_BINARY))
-   
-    binary_data_array = []
+        image = np.array(Image.open(image_titles[i]).convert('L'))
+        binary_data_array.append(Threshold(image))
     
-    # convert these transformed images back to an array
-    for i in range(number_of_images):
-        binary_data_array.append(np.vstack(list(map(np.uint16, binary_images[i][1]))))
-
     binary_data_array = np.array(binary_data_array)
 
     # reshape to original data size
     binary_data_array = np.array([binary_data_array[i,:,:].reshape(28*28) for i in range(number_of_images)])
 
     return binary_data_array
+
+def Threshold(image, threshold=128, max_val=255):
+    
+    bool_vals = (image > threshold)
+    binary_image = bool_vals * max_val
+
+    return binary_image
 
 def ReduceImage(): # (work in progress)
     

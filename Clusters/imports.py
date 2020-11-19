@@ -10,7 +10,8 @@ import matplotlib.pyplot as plt
 # Data Prep 
 import pandas as pd
 import png
-import cv2
+#import cv2
+from PIL import Image # use this instead of opencv (too much trouble installing!!)
 import re
 import os
 
